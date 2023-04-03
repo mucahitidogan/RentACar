@@ -2,11 +2,12 @@ package com.bilgeadam.RentACar.service;
 
 import com.bilgeadam.RentACar.dto.request.SaveColorRequestDto;
 import com.bilgeadam.RentACar.entity.Color;
+import com.bilgeadam.RentACar.exception.RentACarException;
 import com.bilgeadam.RentACar.mapper.IColorMapper;
 import com.bilgeadam.RentACar.repository.IColorRepository;
 import com.bilgeadam.RentACar.utility.ServiceManager;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
+import static com.bilgeadam.RentACar.exception.ErrorType.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +24,17 @@ public class ColorService extends ServiceManager<Color, Long> {
     public void save(SaveColorRequestDto dto){
         Optional<Color> color = colorRepository.findByNameIgnoreCase(dto.getName());
         if(color.isPresent()){
-            throw new NotFoundException(dto.getName() + " bu renk veritabanında kayıtlı");
+           throw new RentACarException(COLOR_FOUND);
         }else{
             save(IColorMapper.INSTANCE.toColor(dto));
         }
     }
 
     public List<Color> findAll(){
-        return colorRepository.findAll();
+        List<Color> colorList = colorRepository.findAll();
+        if(colorList.isEmpty()){
+            throw new RentACarException(COLOR_NOT_FOUND);
+        }
+        return colorList;
     }
 }

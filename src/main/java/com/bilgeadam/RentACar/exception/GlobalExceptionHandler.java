@@ -13,12 +13,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Bu sınıf uygulama içinde oluşacak tüm istisnaların yakalanması için kullanılacaktır.
- * burada bu sınıfın bizim belirlediğimiz özelleştirilmiş istsinaları yakalayacağız.
- * bunun dışında ek kullandığımız kütüphanelerin istisnalarını da ayrıca belirleyip
- * yakalayacğız.
- */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -33,17 +27,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RentACarException.class)
     @ResponseBody
-    public ResponseEntity<ErrorMessage> handlerJava7MonoException(RentACarException exception){
-        System.out.println("Java7MonoException hatası...: "+ exception.toString());
+    public ResponseEntity<ErrorMessage> handlerRentACarException(RentACarException exception){
+        System.out.println("RentACarException hatası...: "+ exception.toString());
         return new ResponseEntity(createErrorMessage(exception.getErrorType(),exception),exception.getErrorType().getHttpStatus());
     }
 
     @ExceptionHandler(ArithmeticException.class)
     @ResponseBody
     public ResponseEntity<String> handleArithmeticException(ArithmeticException exception){
-        /**
-         * Burada oluşan istisna ile ilgili eğer log tutulacak ise bu işlemler yapılır.
-         */
         System.out.println("Aritmetik hatası...: "+ exception.toString());
         return ResponseEntity.ok("Sıfıra bölme işlem hatası");
     }
@@ -62,11 +53,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(createErrorMessage(errorType,exception),errorType.getHttpStatus());
     }
 
-//    @ExceptionHandler(Exception.class)
-//    @ResponseBody
-//    public ResponseEntity<String> handleException(Exception exception){
-//        return ResponseEntity.badRequest().body("Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.");
-//    }
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<ErrorMessage> handleException(Exception exception){

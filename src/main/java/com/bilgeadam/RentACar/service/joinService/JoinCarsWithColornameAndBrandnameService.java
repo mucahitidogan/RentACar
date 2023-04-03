@@ -1,9 +1,11 @@
 package com.bilgeadam.RentACar.service.joinService;
 
 import com.bilgeadam.RentACar.entity.jointable.JoinCarsWithColornameAndBrandname;
+import com.bilgeadam.RentACar.exception.RentACarException;
 import com.bilgeadam.RentACar.repository.joinRepository.IJoinCarsWithColornameAndBrandnameRepository;
 import com.bilgeadam.RentACar.utility.ServiceManager;
 import org.springframework.stereotype.Service;
+import static com.bilgeadam.RentACar.exception.ErrorType.*;
 
 import java.util.List;
 
@@ -18,6 +20,11 @@ public class JoinCarsWithColornameAndBrandnameService extends ServiceManager<Joi
     }
 
     public List<JoinCarsWithColornameAndBrandname> carsWithColorAndBrand(){
-        return joinCarsWithColornameAndBrandnameRepository.carsWithColorAndBrand();
+        List<JoinCarsWithColornameAndBrandname> list = joinCarsWithColornameAndBrandnameRepository.carsWithColorAndBrand();
+        if(list.isEmpty()){
+            throw new RentACarException(CAR_NOT_FOUND);
+        }else{
+            return list;
+        }
     }
 }

@@ -2,10 +2,11 @@ package com.bilgeadam.RentACar.service.joinService;
 
 import com.bilgeadam.RentACar.dto.response.FindJoinRentalDateCarnameBrandComponynameResponseDto;
 import com.bilgeadam.RentACar.entity.jointable.JoinRentalDateCarnameBrandComponyname;
+import static com.bilgeadam.RentACar.exception.ErrorType.*;
+import com.bilgeadam.RentACar.exception.RentACarException;
 import com.bilgeadam.RentACar.mapper.JoinMapper.IRentalDateCarnameBrandComponynameMapper;
 import com.bilgeadam.RentACar.repository.joinRepository.IJoinRentalDateCarnameBrandComponynameRepository;
 import com.bilgeadam.RentACar.utility.ServiceManager;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,13 +23,17 @@ public class JoinRentalDateCarnameBrandComponynameService extends ServiceManager
     }
 
     public List<FindJoinRentalDateCarnameBrandComponynameResponseDto> findDateBrandCompanyCarName(){
+        List<FindJoinRentalDateCarnameBrandComponynameResponseDto> dtoList = new ArrayList<>();
         List<JoinRentalDateCarnameBrandComponyname> joinRentalDateCarnameBrandComponynameList =
                 joinRentalDateCarnameBrandComponynameRepository.findDateBrandCompanyCarName();
-        List<FindJoinRentalDateCarnameBrandComponynameResponseDto> dtoList = new ArrayList<>();
-        joinRentalDateCarnameBrandComponynameList.forEach(joinRentalDateCarnameBrandComponyname -> {
-            dtoList.add(IRentalDateCarnameBrandComponynameMapper.INSTANCE
-                    .toRentalDateCarnameBrandComponyname(joinRentalDateCarnameBrandComponyname));
-        });
-        return dtoList;
+        if(joinRentalDateCarnameBrandComponynameList.isEmpty()){
+            throw new RentACarException(RENTAL_NOT_FOUND);
+        }else{
+            joinRentalDateCarnameBrandComponynameList.forEach(joinRentalDateCarnameBrandComponyname -> {
+                dtoList.add(IRentalDateCarnameBrandComponynameMapper.INSTANCE
+                        .toRentalDateCarnameBrandComponyname(joinRentalDateCarnameBrandComponyname));
+            });
+            return dtoList;
+        }
     }
 }

@@ -28,6 +28,7 @@ public class BrandController {
 
     @GetMapping(FIND_ALL)
     public ResponseEntity<List<Brand>> findAll(){
+
         return ResponseEntity.ok(brandService.findAll());
     }
 }

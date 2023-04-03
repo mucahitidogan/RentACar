@@ -5,7 +5,6 @@ import com.bilgeadam.RentACar.dto.response.FindCarResponseDto;
 import com.bilgeadam.RentACar.dto.response.FindJoinRentalDateCarnameBrandComponynameResponseDto;
 import com.bilgeadam.RentACar.entity.Car;
 import com.bilgeadam.RentACar.entity.jointable.JoinCarsWithColornameAndBrandname;
-import com.bilgeadam.RentACar.entity.jointable.JoinRentalDateCarnameBrandComponyname;
 import com.bilgeadam.RentACar.service.CarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.bilgeadam.RentACar.constants.EndPointList.*;
 
@@ -35,16 +33,16 @@ public class CarController {
         return ResponseEntity.ok(carService.findAll());
     }
 
-    @GetMapping(FIND_ALL_BY_NAME_STARTING_WITH)
-    public ResponseEntity<List<Car>> findAllByNameStartingWithIgnoreCase(String name){
+    @GetMapping(FIND_ALL_BY_NAME_STARTING_WITH + "/{name}")
+    public ResponseEntity<List<Car>> findAllByNameStartingWithIgnoreCase(@PathVariable String name){
         return ResponseEntity.ok(carService.findAllByNameStartingWithIgnoreCase(name));
     }
 
-    @GetMapping(FIND_ALL_BY_BRANID)
+    @GetMapping(FIND_ALL_BY_BRANID + "/{brandId}")
     public ResponseEntity<List<Car>> findAllByBrandid(Long brandId){
         return ResponseEntity.ok(carService.findAllByBrandid(brandId));
     }
-    @GetMapping(FIND_CARS_BY_COLORID)
+    @GetMapping(FIND_CARS_BY_COLORID + "/{colorId}")
     public ResponseEntity<List<Car>> findCarsByColorId(Long colorId){
         return ResponseEntity.ok(carService.findCarsByColorId(colorId));
     }
@@ -53,7 +51,7 @@ public class CarController {
         return ResponseEntity.ok(carService.carsWithColorAndBrand());
     }
 
-    @GetMapping(FIND_ALL_DAILY_PRICE_LESS_THAN)
+    @GetMapping(FIND_ALL_DAILY_PRICE_LESS_THAN + "/{dailyPrice}")
     public ResponseEntity<List<Car>> findAllByDailypriceLessThan(double dailyPrice){
         return ResponseEntity.ok(carService.findAllByDailypriceLessThan(dailyPrice));
     }
@@ -67,8 +65,5 @@ public class CarController {
     public ResponseEntity<List<FindJoinRentalDateCarnameBrandComponynameResponseDto>> findDateBrandCompanyCarName(){
         return ResponseEntity.ok(carService.findDateBrandCompanyCarName());
     }
-
-
-
 
 }

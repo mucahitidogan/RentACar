@@ -1,8 +1,6 @@
 package com.bilgeadam.RentACar.repository;
 
-import com.bilgeadam.RentACar.dto.response.FindCarResponseDto;
 import com.bilgeadam.RentACar.entity.Car;
-import com.bilgeadam.RentACar.entity.jointable.JoinRentalDateCarnameBrandComponyname;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -12,8 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface ICarRepository extends JpaRepository<Car, Long> {
-
-
+    
     List<Car> findAllByNameStartingWithIgnoreCase(String name);
 
     List<Car> findAllByBrandid(Long brandId);

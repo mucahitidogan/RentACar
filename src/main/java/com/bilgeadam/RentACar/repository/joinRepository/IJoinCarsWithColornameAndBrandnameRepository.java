@@ -14,4 +14,5 @@ public interface IJoinCarsWithColornameAndBrandnameRepository extends JpaReposit
             "inner join tblcarcolor as cc on cc.car_id = c.carid\n" +
             "inner join tblcolor as co on cc.color_id = co.colorid")
     List<JoinCarsWithColornameAndBrandname> carsWithColorAndBrand();
+
 }

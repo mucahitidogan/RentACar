@@ -16,5 +16,6 @@ public class EndPointList {
     public static final String FIND_ALL_DAILY_PRICE_LESS_THAN = "/find-all-daily-price-less-than";
     public static final String FIND_ALL_CARS_RENTAL_DAILY_PRICE = "/find-all-cars-rental-daily-price";
     public static final String FIND_ALL_RENTAL_DATE_CARNAME_BRANDNAME_COMPANYNAME = "/find-all-rental-date-carname-brandname-componyname";
+    public static final String CARS_WITH_COLOR_AND_BRAND_VIEW = "/cars-with-color-and-brand-view";
 
 }

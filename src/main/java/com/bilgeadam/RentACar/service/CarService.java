@@ -6,19 +6,16 @@ import com.bilgeadam.RentACar.dto.response.FindJoinRentalDateCarnameBrandCompony
 import com.bilgeadam.RentACar.entity.Brand;
 import com.bilgeadam.RentACar.entity.Car;
 import com.bilgeadam.RentACar.entity.jointable.JoinCarsWithColornameAndBrandname;
-import com.bilgeadam.RentACar.entity.jointable.JoinRentalDateCarnameBrandComponyname;
+import com.bilgeadam.RentACar.exception.RentACarException;
 import com.bilgeadam.RentACar.mapper.ICarMapper;
 import com.bilgeadam.RentACar.repository.ICarRepository;
 import com.bilgeadam.RentACar.service.joinService.JoinCarsWithColornameAndBrandnameService;
 import com.bilgeadam.RentACar.service.joinService.JoinRentalDateCarnameBrandComponynameService;
 import com.bilgeadam.RentACar.utility.ServiceManager;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
+import static com.bilgeadam.RentACar.exception.ErrorType.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CarService extends ServiceManager<Car, Long> {
@@ -49,66 +46,93 @@ public class CarService extends ServiceManager<Car, Long> {
                 carColorService.save(colorid, car.getId());
             });
         }else{
-            throw new NotFoundException("Belirttiğiniz marka veritabanında bulunamadı.");
+            throw new RentACarException(BRAND_NOT_FOUND);
         }
 
     }
 
     public List<Car> findAll(){
-        return carRepository.findAll();
+        List<Car> carList =  carRepository.findAll();
+        if(carList.isEmpty()){
+            throw new RentACarException(CAR_NOT_FOUND);
+        }else{
+            return carList;
+        }
     }
 
     public Optional<Car> findById(Long id){
-        return carRepository.findById(id);
+        Optional<Car> optionalCar = carRepository.findById(id);
+        if(optionalCar.isEmpty()){
+            throw new RentACarException(CAR_NOT_FOUND);
+        }else {
+            return optionalCar;
+        }
     }
     public List<Car> findAllByNameStartingWithIgnoreCase(String name){
-        return carRepository.findAllByNameStartingWithIgnoreCase(name);
+        List<Car> carList =  carRepository.findAllByNameStartingWithIgnoreCase(name);
+        if(carList.isEmpty()){
+            throw new RentACarException(CAR_NOT_FOUND);
+        }else{
+            return carList;
+        }
     }
 
     public List<Car> findAllByBrandid(Long brandId){
-        return carRepository.findAllByBrandid(brandId);
+        List<Car> carList =  carRepository.findAllByBrandid(brandId);
+        if(carList.isEmpty()){
+            throw new RentACarException(CAR_NOT_FOUND);
+        }else{
+            return carList;
+        }
     }
 
     public List<Car> findCarsByColorId(Long colorId){
-        return carRepository.findCarsByColorId(colorId);
+        List<Car> carList = carRepository.findCarsByColorId(colorId);
+        if(carList.isEmpty()){
+            throw new RentACarException(CAR_NOT_FOUND);
+        }else{
+            return carList;
+        }
     }
 
     public List<JoinCarsWithColornameAndBrandname> carsWithColorAndBrand(){
         List<JoinCarsWithColornameAndBrandname>  carList =
                 joinCarsWithColornameAndBrandnameService.carsWithColorAndBrand();
         if (carList.isEmpty()){
-            throw new NullPointerException("Veritabanına kayıtlı araba bulunamamıştır");
+            throw new RentACarException(CAR_NOT_FOUND);
         }
         return carList;
     }
 
     public  List<Car> findAllByDailypriceLessThan(double dailyPrice){
-        return carRepository.findAllByDailypriceLessThan(dailyPrice);
+        List<Car> carList = carRepository.findAllByDailypriceLessThan(dailyPrice);
+        if (carList.isEmpty()){
+            throw new RentACarException(CAR_NOT_FOUND);
+        }
+        return carList;
     }
 
     public List<FindCarResponseDto> findCarsByRentalDailyPrice(){
+        List<FindCarResponseDto> dtoList = new ArrayList<>();
         List<Car> carList = carRepository.findCarsByRentalDailyPrice();
         if(carList.isEmpty()){
-            throw new NullPointerException("Veritabanında kiralık araba bulunamadı.");
+            throw new RentACarException(CAR_NOT_FOUND);
+        }else {
+            carList.forEach(car -> {
+                dtoList.add(ICarMapper.INSTANCE.toFindCarResponseDto(car));
+            });
+            return dtoList;
         }
-        List<FindCarResponseDto> dtoList = new ArrayList<>();
-        carList.forEach(car -> {
-            dtoList.add(ICarMapper.INSTANCE.toFindCarResponseDto(car));
-                });
-        return dtoList;
     }
 
-//    public  List<Object> findDateBrandCompanyCarName(){
-//        List oList = carRepository.findDateBrandCompanyCarName();
-//        return oList;
-//    }
    public List<FindJoinRentalDateCarnameBrandComponynameResponseDto> findDateBrandCompanyCarName(){
        List<FindJoinRentalDateCarnameBrandComponynameResponseDto> dtoList =
                joinRentalDateCarnameBrandComponynameService.findDateBrandCompanyCarName();
         if(dtoList.isEmpty()){
-            throw new NotFoundException("Aradığınız veri veritabanında veri bulunamamıştır.");
+            throw new RentACarException(CAR_NOT_FOUND);
+        }else{
+            return dtoList;
         }
-        return dtoList;
    }
 
 }
